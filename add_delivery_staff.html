@@ -1,0 +1,12 @@
+{% extends '_base.html' %}
+{% block content %}
+  <a class="btn btn-secondary mb-3" href="/delivery_staff">Back</a>
+  <h2>Add Delivery Staff</h2>
+  <form method="post">
+    <div class="mb-2"><input class="form-control" name="name" placeholder="Name" required></div>
+    <div class="mb-2"><input class="form-control" name="phone_no" placeholder="Phone"></div>
+    <div class="mb-2"><input class="form-control" name="vehicle_type" placeholder="Vehicle Type"></div>
+    <div class="mb-2"><input class="form-control" name="current_loc" placeholder="Current Location"></div>
+    <button class="btn btn-success">Add Staff</button>
+  </form>
+{% endblock %}
