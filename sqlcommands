@@ -1,0 +1,102 @@
+CREATE TABLE users (
+  user_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  name VARCHAR(100) DEFAULT NULL,
+  email VARCHAR(100) UNIQUE NOT NULL,
+  password VARCHAR(100) NOT NULL,
+  phone_no VARCHAR(15) DEFAULT NULL,
+  address VARCHAR(100) DEFAULT NULL,
+  created_at TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+CREATE TABLE restaurants (
+  restaurant_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  name VARCHAR(100) NOT NULL,
+  owner_name VARCHAR(100) DEFAULT NULL,
+  email VARCHAR(100) NOT NULL UNIQUE,
+  phone_no VARCHAR(15) DEFAULT NULL,
+  address VARCHAR(100) DEFAULT NULL,
+  cuisine_type VARCHAR(50) DEFAULT NULL,
+  created_at TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+CREATE TABLE menu_items (
+  item_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  restaurant_id INT DEFAULT NULL,
+  name VARCHAR(70) DEFAULT NULL,
+  description VARCHAR(100) DEFAULT NULL,
+  category VARCHAR(70) DEFAULT NULL,
+  price DECIMAL(10,2) DEFAULT NULL,
+  available TINYINT(1) DEFAULT 1,
+  created_at TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  CONSTRAINT fk_menu_rest FOREIGN KEY (restaurant_id)
+    REFERENCES restaurants(restaurant_id) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+CREATE TABLE payments (
+  payment_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  order_id INT DEFAULT NULL,
+  payment_status ENUM('Pending','Completed','Failed') DEFAULT 'Pending',
+  payment_method ENUM('Cash','Card','UPI') DEFAULT 'Cash',
+  amount DECIMAL(10,2) NOT NULL,
+  created_at TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE orders (
+  order_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  user_id INT DEFAULT NULL,
+  restaurant_id INT DEFAULT NULL,
+  item_id INT DEFAULT NULL,
+  total_amount DECIMAL(10,2) NOT NULL,
+  delivery_address VARCHAR(255) DEFAULT NULL,
+  order_date TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
+  order_status ENUM('Pending','Preparing','Delivered','Cancelled') DEFAULT 'Pending',
+  payment_id INT DEFAULT NULL,
+  FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE ON UPDATE CASCADE,
+  FOREIGN KEY (restaurant_id) REFERENCES restaurants(restaurant_id) ON DELETE CASCADE ON UPDATE CASCADE,
+  FOREIGN KEY (item_id) REFERENCES menu_items(item_id) ON DELETE CASCADE ON UPDATE CASCADE,
+  FOREIGN KEY (payment_id) REFERENCES payments(payment_id) ON DELETE SET NULL ON UPDATE CASCADE
+);
+
+CREATE TABLE order_items (
+  order_item_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  order_id INT NOT NULL,
+  item_id INT NOT NULL,
+  quantity INT NOT NULL DEFAULT 1,
+  price DECIMAL(10,2) NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (order_id) REFERENCES orders(order_id) ON DELETE CASCADE ON UPDATE CASCADE,
+  FOREIGN KEY (item_id) REFERENCES menu_items(item_id) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+CREATE TABLE delivery_staff (
+  delivery_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  name VARCHAR(50) NOT NULL,
+  phone_no VARCHAR(15) DEFAULT NULL,
+  vehicle_type VARCHAR(30) DEFAULT NULL,
+  current_loc VARCHAR(100) DEFAULT NULL,
+  assigned_order_id INT DEFAULT NULL,
+  status ENUM('available','on delivery','inactive') DEFAULT 'available',
+  created_at TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  FOREIGN KEY (assigned_order_id) REFERENCES orders(order_id) ON DELETE SET NULL ON UPDATE CASCADE
+);
+
+-- sample data (optional)
+INSERT INTO restaurants (name, owner_name, email, phone_no, address, cuisine_type)
+VALUES ('Food Hub','Kranthi','foodhub@example.com','9000012345','Hyderabad','Indian');
+
+INSERT INTO menu_items (restaurant_id, name, description, category, price)
+VALUES (1,'Chicken Biryani','Spicy biryani','Main Course',180.00),
+       (1,'Gulab Jamun','Dessert','Dessert',40.00);
+
+INSERT INTO users (name,email,password,phone_no,address)
+VALUES ('Harshini','harshini@example.com','pass123','9876543210','Hyderabad');
+
+INSERT INTO delivery_staff (name, phone_no, vehicle_type, current_loc, status)
+VALUES ('Raju','9000022211','Bike','Ameerpet','available');
+```
+
+---
