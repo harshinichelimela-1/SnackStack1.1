@@ -1,0 +1,23 @@
+{% extends '_base.html' %}
+{% block content %}
+  <a class="btn btn-secondary mb-3" href="/employee">Back</a>
+  <h2>Delivery Staff</h2>
+  <a class="btn btn-success mb-3" href="/add_delivery_staff">Add Staff</a>
+
+  <table class="table">
+    <thead><tr><th>ID</th><th>Name</th><th>Phone</th><th>Vehicle</th><th>Action</th></tr></thead>
+    <tbody>
+      {% for s in staff %}
+      <tr>
+        <td>{{ s.delivery_id }}</td>
+        <td>{{ s.name }}</td>
+        <td>{{ s.phone_no }}</td>
+        <td>{{ s.vehicle_type }}</td>
+        <td><a class="btn btn-sm btn-danger" href="/delete_delivery_staff/{{ s.delivery_id }}">Delete</a></td>
+      </tr>
+      {% else %}
+      <tr><td colspan="5">No staff</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endblock %}
