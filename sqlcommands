@@ -8,6 +8,9 @@ CREATE TABLE IF NOT EXISTS users (
   address VARCHAR(255),
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+INSERT INTO users (name, email, password, phone_no, address)
+VALUES ('Harshini', 'harshini@example.com', 'admin_24072006', '1234567890', 'Hyderabad');
+
 
 -- EMPLOYEES (admin accounts)
 CREATE TABLE IF NOT EXISTS employees (
