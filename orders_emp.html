@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head><meta charset="utf-8"><title>Orders</title></head>
+<body>
+  <h2>Orders</h2>
+  <table border="1" cellpadding="6">
+    <tr><th>ID</th><th>User ID</th><th>Total</th><th>Status</th><th>Staff ID</th><th>Payment</th><th>Date</th></tr>
+    {% for o in orders %}
+    <tr>
+      <td>{{ o.order_id }}</td>
+      <td>{{ o.user_id }}</td>
+      <td>₹{{ o.total_amount }}</td>
+      <td>{{ o.status }}</td>
+      <td>{{ o.staff_id }}</td>
+      <td>₹{{ o.payment_amount if o.payment_amount else '' }}</td>
+      <td>{{ o.created_at }}</td>
+    </tr>
+    {% endfor %}
+  </table>
+  <p><a href="/employee">Back</a></p>
+</body>
+</html>
