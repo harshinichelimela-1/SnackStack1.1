@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Delivery Staff</title>
+    <style>
+        body { font-family: Arial; margin: 30px; }
+        table { border-collapse: collapse; width: 100%; }
+        th, td { border: 1px solid #ccc; padding: 8px; }
+        th { background-color: #f2f2f2; }
+    </style>
+</head>
+<body>
+<h1>Delivery Staff</h1>
+<table>
+    <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Phone</th>
+        <th>Vehicle Type</th>
+        <th>Current Location</th>
+        <th>Assigned Order ID</th>
+        <th>Status</th>
+        <th>Created</th>
+        <th>Updated</th>
+    </tr>
+    {% for d in data %}
+    <tr>
+        <td>{{ d.delivery_id }}</td>
+        <td>{{ d.name }}</td>
+        <td>{{ d.phone_no }}</td>
+        <td>{{ d.vehicle_type }}</td>
+        <td>{{ d.current_loc }}</td>
+        <td>{{ d.assigned_order_id }}</td>
+        <td>{{ d.status }}</td>
+        <td>{{ d.created_at }}</td>
+        <td>{{ d.updated_at }}</td>
+    </tr>
+    {% endfor %}
+</table>
+<br><a href="/">Back to Home</a>
+</body>
+</html>
