@@ -1,0 +1,11 @@
+{% extends '_base.html' %}
+{% block content %}
+  <a class="btn btn-secondary mb-3" href="/logout">Logout</a>
+  <h2>Employee Dashboard</h2>
+  <div class="list-group">
+    <a href="/manage_restaurants" class="list-group-item list-group-item-action">Manage Restaurants</a>
+    <a href="/delivery_staff" class="list-group-item list-group-item-action">Manage Delivery Staff</a>
+    <a href="/users_list" class="list-group-item list-group-item-action">View Users</a>
+    <a href="/orders_list" class="list-group-item list-group-item-action">View Orders</a>
+  </div>
+{% endblock %}
