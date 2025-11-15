@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head><meta charset="utf-8"><title>Edit Restaurant</title></head>
+<body>
+  <h2>Edit Restaurant</h2>
+  <form method="post" action="/employee/restaurants/edit/{{ r.restaurant_id }}">
+    Name: <input name="name" value="{{ r.name }}" required><br><br>
+    Owner: <input name="owner_name" value="{{ r.owner_name }}"><br><br>
+    Email: <input name="email" value="{{ r.email }}"><br><br>
+    Phone: <input name="phone_no" value="{{ r.phone_no }}"><br><br>
+    Address: <input name="address" value="{{ r.address }}"><br><br>
+    Cuisine: <input name="cuisine_type" value="{{ r.cuisine_type }}"><br><br>
+    <button type="submit">Save</button>
+  </form>
+  <p><a href="/employee/restaurants">Back</a></p>
+</body>
+</html>
