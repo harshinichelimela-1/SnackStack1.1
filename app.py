@@ -25,44 +25,62 @@ def random_str(n=8):
 @app.route('/')
 def home():
     return render_template('home.html')
-
 # USER LOGIN
 @app.route('/login_user', methods=['GET','POST'])
 def login_user():
     if request.method == 'POST':
-        email = request.form['email']
-        password = request.form['password']
+        email = request.form.get('email').strip()      # remove extra spaces
+        password = request.form.get('password').strip()
+        
         db = get_db()
         cur = db.cursor(dictionary=True)
+        
+        # Check plain-text match in users table
         cur.execute("SELECT user_id, name FROM users WHERE email=%s AND password=%s", (email, password))
-        u = cur.fetchone()
-        cur.close(); db.close()
-        if u:
+        user = cur.fetchone()
+        
+        cur.close()
+        db.close()
+        
+        if user:
             session.clear()
-            session['user_id'] = u['user_id']
-            session['user_name'] = u['name']
+            session['user_id'] = user['user_id']
+            session['user_name'] = user['name']
             session.setdefault('cart', [])   # list of dicts {item_id, name, price, qty}
             return redirect(url_for('user_home'))
-        flash('Invalid credentials','danger')
+        
+        flash('Invalid email or password','danger')
+    
     return render_template('login_user.html')
 
+
+# EMPLOYEE LOGIN
 # EMPLOYEE LOGIN
 @app.route('/login_employee', methods=['GET','POST'])
 def login_employee():
     if request.method == 'POST':
-        emp = request.form['username']
-        pwd = request.form['password']
+        username = request.form.get('username').strip()
+        password = request.form.get('password').strip()
+        
         db = get_db()
         cur = db.cursor(dictionary=True)
-        cur.execute("SELECT emp_id FROM employees WHERE emp_id=%s AND password=%s", (emp, pwd))
-        row = cur.fetchone()
-        cur.close(); db.close()
-        if row:
+        
+        # Make sure your employees table has 'username' column
+        cur.execute("SELECT emp_id FROM employees WHERE username=%s AND password=%s", (username, password))
+        emp = cur.fetchone()
+        
+        cur.close()
+        db.close()
+        
+        if emp:
             session.clear()
-            session['emp'] = row['emp_id']
+            session['emp'] = emp['emp_id']
             return redirect(url_for('employee_home'))
+        
         flash('Invalid employee credentials','danger')
+    
     return render_template('login_employee.html')
+
 
 # LOGOUT
 @app.route('/logout')
