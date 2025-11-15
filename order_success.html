@@ -1,9 +1,10 @@
-{% extends '_base.html' %}
-{% block content %}
-  <div class="text-center">
-    <h1 class="text-success">Order Placed Successfully!</h1>
-    <p>Your Order ID: <strong>{{ order_id }}</strong></p>
-    <p>Total Paid: <strong>₹{{ "%.2f"|format(total) }}</strong></p>
-    <a class="btn btn-primary" href="/restaurants">Back to Restaurants</a>
-  </div>
-{% endblock %}
+<!DOCTYPE html>
+<html>
+<head><meta charset="utf-8"><title>Order Placed</title></head>
+<body>
+  <h2>Order Placed Successfully!</h2>
+  <p>Order ID: {{ order_id if order_id else '' }}</p>
+  <p>Total: ₹{{ "%.2f"|format(total) if total else '' }}</p>
+  <p><a href="/restaurants">Back to Restaurants</a></p>
+</body>
+</html>
