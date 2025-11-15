@@ -1,0 +1,14 @@
+{% extends '_base.html' %}
+{% block content %}
+  <a class="btn btn-secondary mb-3" href="/manage_restaurants">Back</a>
+  <h2>Add Restaurant</h2>
+  <form method="post">
+    <div class="mb-2"><input class="form-control" name="name" placeholder="Restaurant name" required></div>
+    <div class="mb-2"><input class="form-control" name="owner_name" placeholder="Owner name"></div>
+    <div class="mb-2"><input class="form-control" name="email" placeholder="Email"></div>
+    <div class="mb-2"><input class="form-control" name="phone_no" placeholder="Phone"></div>
+    <div class="mb-2"><input class="form-control" name="cuisine_type" placeholder="Cuisine"></div>
+    <div class="mb-2"><input class="form-control" name="address" placeholder="Address"></div>
+    <button class="btn btn-success">Add</button>
+  </form>
+{% endblock %}
