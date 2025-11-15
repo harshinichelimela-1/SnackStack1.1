@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html>
+<head><meta charset="utf-8"><title>Restaurants</title></head>
+<body>
+  <h2>Restaurants</h2>
+  <ul>
+    {% for r in restaurants %}
+      <li><strong>{{ r.name }}</strong> — {{ r.cuisine_type }} — <a href="/menu/{{ r.restaurant_id }}">View Menu</a></li>
+    {% endfor %}
+  </ul>
+  <p><a href="/user">Back</a></p>
+</body>
+</html>
