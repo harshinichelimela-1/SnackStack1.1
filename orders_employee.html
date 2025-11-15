@@ -1,0 +1,22 @@
+{% extends '_base.html' %}
+{% block content %}
+  <a class="btn btn-secondary mb-3" href="/employee">Back</a>
+  <h2>Orders</h2>
+  <table class="table">
+    <thead><tr><th>Order ID</th><th>User ID</th><th>Total</th><th>Status</th><th>Payment</th><th>Date</th></tr></thead>
+    <tbody>
+      {% for o in orders %}
+      <tr>
+        <td>{{ o.order_id }}</td>
+        <td>{{ o.user_id }}</td>
+        <td>₹{{ o.total_amount }}</td>
+        <td>{{ o.order_status }}</td>
+        <td>{{ o.payment_status }}</td>
+        <td>{{ o.order_date }}</td>
+      </tr>
+      {% else %}
+      <tr><td colspan="6">No orders</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endblock %}
