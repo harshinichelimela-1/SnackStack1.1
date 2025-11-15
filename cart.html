@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head><meta charset="utf-8"><title>Cart</title></head>
+<body>
+  <h2>Your Cart</h2>
+  {% if cart|length == 0 %}
+    <p>Cart is empty.</p>
+  {% else %}
+    <table border="1" cellpadding="6">
+      <tr><th>Name</th><th>Price</th><th>Qty</th><th>Action</th></tr>
+      {% for c in cart %}
+        <tr>
+          <td>{{ c.name }}</td>
+          <td>₹{{ "%.2f"|format(c.price) }}</td>
+          <td>{{ c.qty }}</td>
+          <td><a href="/cart/delete/{{ c.item_id }}">Delete</a></td>
+        </tr>
+      {% endfor %}
+    </table>
+    <h3>Total: ₹{{ "%.2f"|format(total) }}</h3>
+
+    <form method="post" action="/cart/proceed">
+      Payment method:
+      <select name="payment_method">
+        <option value="Cash">Cash</option>
+        <option value="UPI">UPI</option>
+        <option value="Card">Card</option>
+      </select><br><br>
+      <button type="submit">Proceed to Order</button>
+    </form>
+  {% endif %}
+  <p><a href="/user">Back</a></p>
+</body>
+</html>
