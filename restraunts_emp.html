@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head><meta charset="utf-8"><title>Restaurants Management</title></head>
+<body>
+  <h2>Restaurants</h2>
+  <p><a href="/employee/restaurants/add">Add Restaurant</a></p>
+  <table border="1" cellpadding="6">
+    <tr><th>ID</th><th>Name</th><th>Owner</th><th>Cuisine</th><th>Actions</th></tr>
+    {% for r in restaurants %}
+    <tr>
+      <td>{{ r.restaurant_id }}</td>
+      <td>{{ r.name }}</td>
+      <td>{{ r.owner_name }}</td>
+      <td>{{ r.cuisine_type }}</td>
+      <td>
+        <a href="/employee/restaurants/edit/{{ r.restaurant_id }}">Edit</a> |
+        <a href="/employee/restaurants/delete/{{ r.restaurant_id }}" onclick="return confirm('Delete restaurant?')">Delete</a>
+      </td>
+    </tr>
+    {% endfor %}
+  </table>
+  <p><a href="/employee">Back</a></p>
+</body>
+</html>
