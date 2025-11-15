@@ -1,23 +1,25 @@
-{% extends '_base.html' %}
-{% block content %}
-  <a class="btn btn-secondary mb-3" href="/employee">Back</a>
+<!DOCTYPE html>
+<html>
+<head><meta charset="utf-8"><title>Delivery Staff Management</title></head>
+<body>
   <h2>Delivery Staff</h2>
-  <a class="btn btn-success mb-3" href="/add_delivery_staff">Add Staff</a>
-
-  <table class="table">
-    <thead><tr><th>ID</th><th>Name</th><th>Phone</th><th>Vehicle</th><th>Action</th></tr></thead>
-    <tbody>
-      {% for s in staff %}
-      <tr>
-        <td>{{ s.delivery_id }}</td>
-        <td>{{ s.name }}</td>
-        <td>{{ s.phone_no }}</td>
-        <td>{{ s.vehicle_type }}</td>
-        <td><a class="btn btn-sm btn-danger" href="/delete_delivery_staff/{{ s.delivery_id }}">Delete</a></td>
-      </tr>
-      {% else %}
-      <tr><td colspan="5">No staff</td></tr>
-      {% endfor %}
-    </tbody>
+  <p><a href="/employee/delivery_staff/add">Add Staff</a></p>
+  <table border="1" cellpadding="6">
+    <tr><th>ID</th><th>Name</th><th>Phone</th><th>Vehicle</th><th>Status</th><th>Actions</th></tr>
+    {% for s in staff %}
+    <tr>
+      <td>{{ s.staff_id }}</td>
+      <td>{{ s.name }}</td>
+      <td>{{ s.phone_no }}</td>
+      <td>{{ s.vehicle_type }}</td>
+      <td>{{ s.status }}</td>
+      <td>
+        <a href="/employee/delivery_staff/edit/{{ s.staff_id }}">Edit</a> |
+        <a href="/employee/delivery_staff/delete/{{ s.staff_id }}" onclick="return confirm('Delete staff?')">Delete</a>
+      </td>
+    </tr>
+    {% endfor %}
   </table>
-{% endblock %}
+  <p><a href="/employee">Back</a></p>
+</body>
+</html>
