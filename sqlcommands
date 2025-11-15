@@ -1,102 +1,106 @@
-CREATE TABLE users (
+
+CREATE TABLE IF NOT EXISTS users (
   user_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-  name VARCHAR(100) DEFAULT NULL,
+  name VARCHAR(100),
   email VARCHAR(100) UNIQUE NOT NULL,
   password VARCHAR(100) NOT NULL,
-  phone_no VARCHAR(15) DEFAULT NULL,
-  address VARCHAR(100) DEFAULT NULL,
-  created_at TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
-  updated_at TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+  phone_no VARCHAR(15),
+  address VARCHAR(255),
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE TABLE restaurants (
+-- EMPLOYEES (admin accounts)
+CREATE TABLE IF NOT EXISTS employees (
+  emp_id VARCHAR(50) PRIMARY KEY,
+  password VARCHAR(100) NOT NULL,
+  role VARCHAR(50) DEFAULT 'employee'
+);
+
+INSERT INTO employees (emp_id, password, role) VALUES
+('SnackStack.emp001', 'admin_24072006', 'admin'),
+('SnackStack.emp002', 'admin_24072006', 'admin')
+ON DUPLICATE KEY UPDATE password=VALUES(password);
+
+-- DELIVERY STAFF
+CREATE TABLE IF NOT EXISTS delivery_staff (
+  staff_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  name VARCHAR(100) NOT NULL,
+  phone_no VARCHAR(15),
+  vehicle_type VARCHAR(50),
+  current_loc VARCHAR(100),
+  status ENUM('available','busy','inactive') DEFAULT 'available',
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- RESTAURANTS
+CREATE TABLE IF NOT EXISTS restaurants (
   restaurant_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
   name VARCHAR(100) NOT NULL,
-  owner_name VARCHAR(100) DEFAULT NULL,
-  email VARCHAR(100) NOT NULL UNIQUE,
-  phone_no VARCHAR(15) DEFAULT NULL,
-  address VARCHAR(100) DEFAULT NULL,
-  cuisine_type VARCHAR(50) DEFAULT NULL,
-  created_at TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
-  updated_at TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+  owner_name VARCHAR(100),
+  email VARCHAR(100),
+  phone_no VARCHAR(15),
+  address VARCHAR(255),
+  cuisine_type VARCHAR(50),
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE TABLE menu_items (
+-- MENU ITEMS
+CREATE TABLE IF NOT EXISTS menu_items (
   item_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-  restaurant_id INT DEFAULT NULL,
-  name VARCHAR(70) DEFAULT NULL,
-  description VARCHAR(100) DEFAULT NULL,
-  category VARCHAR(70) DEFAULT NULL,
-  price DECIMAL(10,2) DEFAULT NULL,
+  restaurant_id INT NOT NULL,
+  name VARCHAR(100) NOT NULL,
+  description VARCHAR(255),
+  price DECIMAL(10,2) NOT NULL,
   available TINYINT(1) DEFAULT 1,
-  created_at TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
-  updated_at TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  CONSTRAINT fk_menu_rest FOREIGN KEY (restaurant_id)
-    REFERENCES restaurants(restaurant_id) ON DELETE CASCADE ON UPDATE CASCADE
+  FOREIGN KEY (restaurant_id) REFERENCES restaurants(restaurant_id) ON DELETE CASCADE
 );
 
-CREATE TABLE payments (
-  payment_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-  order_id INT DEFAULT NULL,
-  payment_status ENUM('Pending','Completed','Failed') DEFAULT 'Pending',
-  payment_method ENUM('Cash','Card','UPI') DEFAULT 'Cash',
-  amount DECIMAL(10,2) NOT NULL,
-  created_at TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP
-);
-
-CREATE TABLE orders (
+-- ORDERS
+CREATE TABLE IF NOT EXISTS orders (
   order_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-  user_id INT DEFAULT NULL,
-  restaurant_id INT DEFAULT NULL,
-  item_id INT DEFAULT NULL,
+  user_id INT NOT NULL,
   total_amount DECIMAL(10,2) NOT NULL,
-  delivery_address VARCHAR(255) DEFAULT NULL,
-  order_date TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
-  order_status ENUM('Pending','Preparing','Delivered','Cancelled') DEFAULT 'Pending',
-  payment_id INT DEFAULT NULL,
-  FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE ON UPDATE CASCADE,
-  FOREIGN KEY (restaurant_id) REFERENCES restaurants(restaurant_id) ON DELETE CASCADE ON UPDATE CASCADE,
-  FOREIGN KEY (item_id) REFERENCES menu_items(item_id) ON DELETE CASCADE ON UPDATE CASCADE,
-  FOREIGN KEY (payment_id) REFERENCES payments(payment_id) ON DELETE SET NULL ON UPDATE CASCADE
+  status ENUM('Placed','Preparing','Out for Delivery','Delivered','Cancelled') DEFAULT 'Placed',
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  staff_id INT DEFAULT NULL,
+  FOREIGN KEY (user_id) REFERENCES users(user_id),
+  FOREIGN KEY (staff_id) REFERENCES delivery_staff(staff_id)
 );
 
-CREATE TABLE order_items (
+-- ORDER ITEMS
+CREATE TABLE IF NOT EXISTS order_items (
   order_item_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
   order_id INT NOT NULL,
   item_id INT NOT NULL,
   quantity INT NOT NULL DEFAULT 1,
   price DECIMAL(10,2) NOT NULL,
+  FOREIGN KEY (order_id) REFERENCES orders(order_id) ON DELETE CASCADE,
+  FOREIGN KEY (item_id) REFERENCES menu_items(item_id)
+);
+
+-- PAYMENTS
+CREATE TABLE IF NOT EXISTS payments (
+  payment_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  order_id INT NOT NULL,
+  amount DECIMAL(10,2) NOT NULL,
+  method VARCHAR(50),
+  status ENUM('Pending','Completed','Failed') DEFAULT 'Completed',
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  FOREIGN KEY (order_id) REFERENCES orders(order_id) ON DELETE CASCADE ON UPDATE CASCADE,
-  FOREIGN KEY (item_id) REFERENCES menu_items(item_id) ON DELETE CASCADE ON UPDATE CASCADE
+  FOREIGN KEY (order_id) REFERENCES orders(order_id)
 );
 
-CREATE TABLE delivery_staff (
-  delivery_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-  name VARCHAR(50) NOT NULL,
-  phone_no VARCHAR(15) DEFAULT NULL,
-  vehicle_type VARCHAR(30) DEFAULT NULL,
-  current_loc VARCHAR(100) DEFAULT NULL,
-  assigned_order_id INT DEFAULT NULL,
-  status ENUM('available','on delivery','inactive') DEFAULT 'available',
-  created_at TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
-  updated_at TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  FOREIGN KEY (assigned_order_id) REFERENCES orders(order_id) ON DELETE SET NULL ON UPDATE CASCADE
-);
-
--- sample data (optional)
+-- Sample data (optional)
 INSERT INTO restaurants (name, owner_name, email, phone_no, address, cuisine_type)
-VALUES ('Food Hub','Kranthi','foodhub@example.com','9000012345','Hyderabad','Indian');
+VALUES ('Food Hub','Kranthi','foodhub@example.com','9000012345','Hyderabad','Indian')
+ON DUPLICATE KEY UPDATE name=name;
 
-INSERT INTO menu_items (restaurant_id, name, description, category, price)
-VALUES (1,'Chicken Biryani','Spicy biryani','Main Course',180.00),
-       (1,'Gulab Jamun','Dessert','Dessert',40.00);
+INSERT INTO menu_items (restaurant_id, name, description, price)
+VALUES (1, 'Chicken Biryani', 'Spicy biryani', 180.00),
+       (1, 'Paneer Butter Masala', 'Creamy paneer', 150.00)
+ON DUPLICATE KEY UPDATE name=name;
 
 INSERT INTO users (name,email,password,phone_no,address)
-VALUES ('Harshini','harshini@example.com','pass123','9876543210','Hyderabad');
+VALUES ('Harshini','harshini@example.com','pass123','9876543210','Hyderabad')
+ON DUPLICATE KEY UPDATE email=email;
 
-INSERT INTO delivery_staff (name, phone_no, vehicle_type, current_loc, status)
-VALUES ('Raju','9000022211','Bike','Ameerpet','available');
-```
 
----
