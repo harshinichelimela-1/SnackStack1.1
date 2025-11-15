@@ -18,6 +18,11 @@ CREATE TABLE IF NOT EXISTS employees (
   password VARCHAR(100) NOT NULL,
   role VARCHAR(50) DEFAULT 'employee'
 );
+INSERT INTO employees (username, password, name)
+VALUES 
+('SnackStack.emp001', 'admin_24072006', 'Employee 1'),
+('SnackStack.emp002', 'admin_24072006', 'Employee 2');
+
 
 INSERT INTO employees (emp_id, password, role) VALUES
 ('SnackStack.emp001', 'admin_24072006', 'admin'),
