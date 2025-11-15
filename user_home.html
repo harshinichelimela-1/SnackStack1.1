@@ -1,34 +1,10 @@
-{% extends '_base.html' %}
-{% block content %}
-  <a class="btn btn-secondary mb-3" href="/logout">Back / Logout</a>
-  <h2>User Home</h2>
-  <p><a href="/restaurants" class="btn btn-primary">View Restaurants</a>
-     <a href="/cart" class="btn btn-success">View Cart</a></p>
-{% endblock %}
-```
-
----
-
-### `restaurants_user.html`
-
-```html
-{% extends '_base.html' %}
-{% block content %}
-  <a class="btn btn-secondary mb-3" href="/user">Back</a>
-  <h2>Restaurants</h2>
-  <div class="list-group">
-    {% for r in restaurants %}
-      <div class="list-group-item d-flex justify-content-between align-items-center">
-        <div>
-          <h5 class="mb-1">{{ r.name }}</h5>
-          <small>{{ r.address }} — {{ r.cuisine_type }}</small>
-        </div>
-        <div>
-          <a class="btn btn-sm btn-outline-primary" href="/menu_items/{{ r.restaurant_id }}">View Menu</a>
-        </div>
-      </div>
-    {% else %}
-      <p>No restaurants found.</p>
-    {% endfor %}
-  </div>
-{% endblock %}
+<!DOCTYPE html>
+<html>
+<head><meta charset="utf-8"><title>User Home</title></head>
+<body>
+  <h2>Welcome, {{ name }}</h2>
+  <p><a href="/restaurants">Browse Restaurants</a></p>
+  <p><a href="/cart">View Cart</a></p>
+  <p><a href="/logout">Logout</a></p>
+</body>
+</html>
